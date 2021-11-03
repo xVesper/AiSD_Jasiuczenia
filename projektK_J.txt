@@ -1,0 +1,132 @@
+from typing import Any
+
+class Node:
+    value: Any
+    next: 'Node'
+
+    def __init__(self, value):
+        self.value = value
+        self.next = None
+
+class LinkedList:
+    head: Node
+    tail: Node
+
+    def __init__(self, node: Node = None):
+        self.head = node
+        self.tail = node
+
+    def __len__(self):
+        node = self.head
+        x = 0
+        while node != None:
+            x += 1
+            node = node.next
+        return x
+
+    def __str__(self):
+        string = ""
+        node = self.head
+        for x in range(len(self)):
+            if node.next != None:
+                string += str(node.value) + " -> "
+            if node.next == None:
+                string += str(node.value)
+            node = node.next
+        return string
+
+    def push(self, value: Any)->None :
+        node = Node(value)
+        if (self.head == None):
+            self.head = node
+            self.tail = node
+        else:
+            zxy = self.head
+            self.head = node
+            node.next = zxy
+
+    def append(self, value: Any)->None:
+        node = Node(value)
+        if (self.tail == None):
+            self.head = node
+            self.tail = node
+        else:
+            self.tail.next = node
+            self.tail = node
+
+    def node(self, at: int)->Node:
+        zxy = self.head
+        while (at > 0):
+            at = at - 1
+            if(zxy == None):
+                break
+            else:
+                zxy = zxy.next
+        return zxy
+
+    def insert(self, value: Any, after: Node)->None:
+        node = Node(value)
+        xyz = self.head
+        while (xyz != after):
+            if(xyz == None):
+                return
+            xyz = xyz.next
+        node.next = xyz.next
+        xyz.next = node
+
+    def pop(self):
+        if self.head == None:
+            return None
+        xyz = self.head
+        self.head = xyz.next
+        return xyz
+
+    def remove_last(self)->Any:
+        if (self.tail == None):
+            return None
+        else:
+            xyz = self.tail
+            self.tail = self.node(self.__len__() - 2)
+            self.node(self.__len__() - 2).next = None
+        return xyz
+
+
+    def remove(self, after: Node)->Any:
+        xyz = self.head
+        while (xyz != after):
+            if (xyz == None):
+                return
+            xyz = xyz.next
+        if (xyz.next == None):
+            return
+        else:
+            xyz.next = xyz.next.next
+
+    def print(self) -> None:
+        node = self.head
+        while (node != None):
+            print(node.value)
+            node = node.next
+
+
+class Stack:
+
+    def __init__(self):
+        self._storage = LinkedList
+
+    def __len__(self):
+        return len(self._storage)
+
+    def __str__(self):
+        string = ""
+
+        for x in range(len(self._storage)):
+            string += "+" + str(self._storage.node(x).value) + "\n"
+
+        return string
+
+    def push(self, value)->None:
+        self._storage.push(value)
+
+    def pop(self):
+            return self._storage.pop().value
