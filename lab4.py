@@ -58,7 +58,6 @@ class TreeNode:
     def __str__(self):
         return self.value
 
-
 class Tree:
     root: TreeNode
 
@@ -83,22 +82,22 @@ class Tree:
         DotExporter(root).to_picture("tree.png")
 
 
-f = TreeNode("F")
-tree = Tree(f)
-b = TreeNode("B")
-f.add(b)
-a = TreeNode("A")
-b.add(a)
-d = TreeNode("D")
-b.add(d)
-c = TreeNode("C")
-d.add(c)
-e = TreeNode("E")
-d.add(e)
-
-tree.show()
-
+# f = TreeNode("F")
+# tree = Tree(f)
+# b = TreeNode("B")
+# f.add(b)
+# a = TreeNode("A")
+# b.add(a)
+# d = TreeNode("D")
+# b.add(d)
+# c = TreeNode("C")
+# d.add(c)
+# e = TreeNode("E")
+# d.add(e)
+#
+# tree.show()
+#
 # def test(k):
 #     print(k)
-
+#
 # print(f.for_each_level_order(test(e)))
