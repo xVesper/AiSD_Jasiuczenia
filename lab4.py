@@ -1,103 +1,146 @@
-from typing import Any, List, Callable, Union
-from anytree import Node, RenderTree
-from anytree.exporter import DotExporter
+from typing import Any, List
 
 
 class TreeNode:
-    value: Any
-    children: List['TreeNode']
-
-    def __init__(self, value):
+    def __init__(self, value:Any):
         self.value = value
+        self.parent = None
         self.children = []
-
-    def is_leaf(self):
-        if not len(self.children):
-            return False
-        return True
-
-    def add(self, child: 'TreeNode') -> None:
-        self.children.append(child)
-
-    def for_each_deep_first(self, visit: Callable[['TreeNode'], None]) -> None:
-        if visit:
-            return
-
-        visit(self)
-
-        for child in self.children:
-            self.for_each_deep_first(visit(child))
-
-    def for_each_level_order(self, visit: Callable[['TreeNode'], None]) -> None:
-        if visit:
-            return
-
-        visit(self)
-
-        fifo = self.children
-
-        while len(fifo):
-            print(fifo[0])
-            fifo += fifo[0]
-
-            del fifo[0]
-
-    def search(self, value: Any) -> Union['TreeNode', None]:
-        if self.value == value:
-            return self
-
-        search_node = None
-        for child in self.children:
-            output = child.search(value)
-
-            if output:
-                search_node = output
-
-        return search_node
 
     def __str__(self):
         return self.value
 
+    def level_of(self):
+        lvl = 0
+        parent = self.parent
+        while parent!=None:
+            lvl+=1
+            parent = parent.parent
+        return lvl
+
+
+
+    def is_leaf(self):
+        if len(self.children) == 0:
+            return True
+        else:
+            return False
+
+    def add(self, child : 'TreeNode'):
+        self.children.append(child)
+        child.parent = self
+
+    def for_each_deep_first(self):
+        for c in self.children:
+
+            type(self).for_each_deep_first(c)
+
+
+
+    def for_each_level_order(self):
+        q = Queue()
+        for c in self.children:
+            q.enqueue(c)
+
+        while len(q)!=0:
+            t = q.peek()
+            q.dequeue().value
+            for c in t.children:
+                q.enqueue(c)
+
+    def search(self, value:Any):
+        if self.value == value:
+            return self
+        else:
+            q = Queue()
+            for c in self.children:
+                q.enqueue(c)
+
+            while len(q) != 0:
+                t = q.peek()
+                comp = q.dequeue()
+                if comp.value == value:
+                    return comp
+                for c in t.children:
+                    q.enqueue(c)
+            return None
+
 class Tree:
-    root: TreeNode
+    def __init__(self, root: TreeNode):
+        self.root = root
 
-    def __init__(self, tree_node):
-        self.root = tree_node
+    def add(self, value:Any, parent:Any):
+        parent.children.append(TreeNode(value))
 
-    def add(self, value: Any, parent_name: Any) -> None:
-        node = self.root.search(parent_name)
+    def for_each_level_order(self):
+        if type(self) is Tree:
+            for c in self.root.children:
+                print(c)
+                Tree.for_each_level_order(c)
+        if type(self) is TreeNode:
+            for c in self.children:
+                print(c)
+                Tree.for_each_level_order(c)
 
-        node.add(TreeNode(value))
 
-    def for_each_level_order(self, visit: Callable[['TreeNode'], None]) -> None:
-        self.root.for_each_level_order(visit)
+    def for_each_deep_first(self):
+        r = self.root
+        q = Queue()
+        for c in r.children:
+            q.enqueue(c)
 
-    def for_each_deep_first(self, visit: Callable[['TreeNode'], None]) -> None:
-        self.root.for_each_deep_first(visit)
+        while len(q) != 0:
+            t = q.peek()
+            q.dequeue()
+            for c in t.children:
+                q.enqueue(c)
+
+
 
     def show(self):
-        root = Node(self.root.value)
-        a = Node("OW", root)
+        spacer = "---|"
 
-        DotExporter(root).to_picture("tree.png")
+        if type(self) is Tree:
+            print(self.root.value)
+            for c in self.root.children:
+
+                print(spacer*c.level_of()+c.value)
+                Tree.show(c)
+        if type(self) is TreeNode:
+            for c in self.children:
+                print(spacer*c.level_of()+c.value)
+                Tree.show(c)
 
 
-# f = TreeNode("F")
-# tree = Tree(f)
-# b = TreeNode("B")
-# f.add(b)
-# a = TreeNode("A")
-# b.add(a)
-# d = TreeNode("D")
-# b.add(d)
-# c = TreeNode("C")
-# d.add(c)
-# e = TreeNode("E")
-# d.add(e)
-#
+
+
+
+
+
+
+
+
+tf = TreeNode("F")
+tb = TreeNode("B") #2
+tg = TreeNode("G")#2
+ta = TreeNode("A")#3b
+td = TreeNode("D")#3b
+ti = TreeNode("I")#3g
+tc = TreeNode("C")#4d
+te = TreeNode("E")#4d
+th = TreeNode("H")#ti
+tree = Tree(tf)
+
+tf.add(tb)
+tf.add(tg)
+tb.add(ta)
+tb.add(td)
+tg.add(ti)
+td.add(tc)
+td.add(te)
+ti.add(th)
+# tree.add(69, ti)
+
 # tree.show()
-#
-# def test(k):
-#     print(k)
-#
-# print(f.for_each_level_order(test(e)))
+# tree.for_each_deep_first()
+tree.show()
