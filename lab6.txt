@@ -1,0 +1,61 @@
+from typing import Any, List
+
+
+class BinaryNode:
+    value: Any
+    left_child: 'BinaryNode'
+    right_child: 'BinaryNode'
+
+    def __init__(self, value):
+        self.value = value
+        self.left_child = None
+        self.right_child = None
+
+    def min(self) -> 'BinaryNode':
+        pass
+
+
+class BinarySearchTree:
+    root: BinaryNode
+
+    def insert(self, value: Any) -> None:
+        self.root = self._insert()
+
+    def _insert(self, node: BinaryNode, value: Any) -> BinaryNode:
+        if value < node.value:
+            node.left_child = BinaryNode(value)
+        else:
+            node.right_child = BinaryNode(value)
+
+        return node
+
+    def insertlist(self, list: List[Any]) -> None:
+        pass
+
+    def contains(self, value: Any) -> bool:
+        pass
+
+    def remove(self, value: Any) -> None:
+        pass
+
+    def _remove(self, node: BinaryNode, value: Any) -> BinaryNode:
+        if value == node.value:
+            if not node.right_child and not node.left_child:
+                return None
+
+            if not node.left_child:
+                return node.right_child
+
+            if not node.right_child:
+                return node.left_child
+
+        if value < node.value:
+            node.left_child = self._remove(node.left_child, value)
+
+        if value > node.value:
+            node.right_child = self._remove(node.right_child, value)
+
+        return node
+
+    def show(self) -> None:
+        pass
