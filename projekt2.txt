@@ -69,7 +69,7 @@ class BinaryTree:
         self.root.traverse_pre_order(visit)
 
     def show(self):
-        spacer = " |===|"
+        spacer = " |-|"
         if type(self) is BinaryTree:
             if self.root.left:
                 BinaryTree.show(self.root.left)
@@ -80,36 +80,31 @@ class BinaryTree:
             if self.left:
                 BinaryTree.show(self.left)
 
-            print("  " + spacer*self.level_of()+str(self.value)+"|")
+            print(spacer*self.level_of()+str(self.value)+"|")
             if self.right:
                 BinaryTree.show(self.right)
-
-def bottom_line(root):
-    if root is None:
-        return
-    hd = 0
-    m = dict()
-    que = []
-
-    while len(que) != 0:
-        if help.left is not None:
-            help.left.head = hd - 1
-        if help.right is not None:
-            help.right.head = hd + 1
-    for i in sorted(m.keys()):
-        print(m[i], end=' ')
 
 def visit(node:BinaryNode):
     print(node.value)
 
-drzewo = BinaryNode(1)
-drzewo.add_left_child(2)
-drzewo.add_right_child(3)
-drzewo.left.add_left_child(4)
-drzewo.left.add_right_child(5)
-drzewo.right.add_right_child(7)
-drzewo.left.left.add_left_child(8)
-drzewo.left.left.add_right_child(9)
+drzewo = BinaryNode(100)
+drzewo.add_left_child(10)
+drzewo.add_right_child(45)
+
+drzewo.left.add_left_child(20)
+drzewo.left.add_right_child(8)
+drzewo.right.add_left_child(53)
+drzewo.right.add_right_child(70)
+
+drzewo.right.right.add_left_child(81)
+drzewo.right.right.add_right_child(24)
+drzewo.left.left.add_left_child(25)
+drzewo.left.left.add_right_child(15)
+
+drzewo.left.left.left.add_left_child(48)
+drzewo.left.left.left.add_right_child(31)
+drzewo.left.left.right.add_left_child(17)
+drzewo.left.left.right.add_right_child(21)
 
 bt = BinaryTree(drzewo)
 
@@ -118,4 +113,3 @@ bt.show()
 #drzewo.traverse_post_order(visit)
 print("")
 #bt.traverse_post_order(visit)
-bottom_line(bt.root)
